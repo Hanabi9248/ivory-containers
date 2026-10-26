@@ -42,7 +42,7 @@ export GROUP_ID
 [[ -f "${NSS_WRAPPER_GROUP}" ]] || cp "/etc/group" "${NSS_WRAPPER_GROUP}"
 
 # if the username is missing from the passwd file, then add it
-if [[ ! $(cat "${NSS_WRAPPER_PASSWD}") =~ ${CRUNCHY_NSS_USERNAME}:x:${USER_ID} ]]; then
+if ! awk -F: -v name="${CRUNCHY_NSS_USERNAME}" -v uid="${USER_ID}" '$1 == name && $3 == uid { found = 1 } END { exit !found }' "${NSS_WRAPPER_PASSWD}"; then
     echo "nss_wrapper: adding user"
     passwd_tmp="${NSS_WRAPPER_DIR}/passwd_tmp"
     cp "${NSS_WRAPPER_PASSWD}" "${passwd_tmp}"
@@ -57,7 +57,7 @@ else
 fi
 
 # if the username (which will be the same as the group name) is missing from group file, then add it
-if [[ ! $(cat "${NSS_WRAPPER_GROUP}") =~ ${CRUNCHY_NSS_USERNAME}:x:${USER_ID} ]]; then
+if ! awk -F: -v name="${CRUNCHY_NSS_USERNAME}" -v uid="${USER_ID}" '$1 == name && $3 == uid { found = 1 } END { exit !found }' "${NSS_WRAPPER_GROUP}"; then
     echo "nss_wrapper: adding group"
     group_tmp="${NSS_WRAPPER_DIR}/group_tmp"
     cp "${NSS_WRAPPER_GROUP}" "${group_tmp}"
