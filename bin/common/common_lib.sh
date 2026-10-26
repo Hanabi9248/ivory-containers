@@ -97,10 +97,9 @@ function test_server() {
     echo_info "Waiting for PostgreSQL to be ready.."
     while [[ ${attempt?} < ${max_attempts?} ]]
     do
-        ${PGROOT?}/bin/pg_isready \
+        if ${PGROOT?}/bin/pg_isready \
             --dbname=${dbname?} --host=${dbhost?} \
             --port=${dbport?} --username=${dbuser?}
-        if [[ $? -eq 0 ]]
         then
             error='false'
             break
@@ -132,11 +131,10 @@ function test_query {
     echo_info "Checking if PostgreSQL is accepting queries.."
     while [[ ${attempt?} < ${max_attempts?} ]]
     do
-        ${PGROOT?}/bin/psql \
+        if ${PGROOT?}/bin/psql \
             --dbname=${dbname?} --host=${dbhost?} \
             --port=${dbport?} --username=${dbuser?} \
             --command="SELECT now();"
-        if [[ $? -eq 0 ]]
         then
             error='false'
             break
