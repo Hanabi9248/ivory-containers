@@ -250,10 +250,10 @@ pgadmin4-img-build: $(CCPROOT)/build/pgadmin4/Dockerfile
 		--build-arg PACKAGER=$(PACKAGER) \
 		$(CCPROOT)
 
-pgadmin-img-buildah: pgadmin4-img-build ;
+pgadmin4-img-buildah: pgadmin4-img-build ;
 # only push to docker daemon if variable IMG_PUSH_TO_DOCKER_DAEMON is set to "true"
 ifeq ("$(IMG_PUSH_TO_DOCKER_DAEMON)", "true")
-	sudo --preserve-env buildah push $(CCP_IMAGE_PREFIX)/crunchy-pgadmin4:$(CCP_IMAGE_TAG) docker-daemon:$(CCP_IMAGE_PREFIX)/crunchy-pgadmin4:$(CCP_IMAGE_TAG)
+	sudo --preserve-env buildah push $(CCP_IMAGE_PREFIX)/pgadmin:$(CCP_BASEOS)-$(CCP_PGADMIN_VERSION)-$(CCP_IVYO_VERSION)-$(CCP_VERSION) docker-daemon:$(CCP_IMAGE_PREFIX)/pgadmin:$(CCP_BASEOS)-$(CCP_PGADMIN_VERSION)-$(CCP_IVYO_VERSION)-$(CCP_VERSION)
 endif
 
 pgadmin-img-docker: pgadmin-img-build
